@@ -1,0 +1,355 @@
+{
+  "case_id": "case-04",
+  "generated_at": "2026-09-15T11:59:01.184741+00:00",
+  "dry_run": false,
+  "inbound_message": "From: Peter Lindqvist <p.lindqvist@mailbox.example>\nTo: Aerlink Customer Care <care@aerlink.example>\nDate: Wed, 5 Aug 2026 12:02:55 +0100\nSubject: Re: cancelled flight compensation claim BA-99201 - THIRD REQUEST\n\nTo whom it may concern,\n\nI am writing for the third time about my cancelled flight, reference BA-99201,\non 29 July, Copenhagen to Manchester. I was delayed nine hours and I am claiming\nthe compensation I am entitled to under the regulations.\n\nI have now written twice with no reply whatsoever. Please treat this as a formal\ncomplaint about both the original flight and your failure to respond, and confirm\nin writing within 14 days.\n\nYours faithfully,\nPeter Lindqvist\n",
+  "decision": {
+    "summary": "Escalated to a human (queue: GENERAL).\nSummary: Unable to find any bookings for passenger Peter Lindqvist related to flight BA-99201 on 29 July 2026. Possible issues with booking reference or email provided.\nRequested decision: Please investigate and assist in finding the relevant booking or provide further guidance on how to proceed.\nEscalation ID: ESC-00005",
+    "escalated": true,
+    "escalated_reason": "model_escalated"
+  },
+  "reasoning": {
+    "entitlements_consulted": []
+  },
+  "consulted": [
+    {
+      "tool": "search_bookings",
+      "arguments": {
+        "q": "BA-99201"
+      },
+      "result": {
+        "query": "BA-99201",
+        "match_count": 0,
+        "results": []
+      }
+    },
+    {
+      "tool": "search_bookings",
+      "arguments": {
+        "q": "p.lindqvist@mailbox.example"
+      },
+      "result": {
+        "query": "p.lindqvist@mailbox.example",
+        "match_count": 0,
+        "results": []
+      }
+    },
+    {
+      "tool": "search_bookings",
+      "arguments": {
+        "q": "Peter Lindqvist"
+      },
+      "result": {
+        "query": "Peter Lindqvist",
+        "match_count": 0,
+        "results": []
+      }
+    },
+    {
+      "tool": "search_bookings",
+      "arguments": {
+        "q": "Lindqvist"
+      },
+      "result": {
+        "query": "Lindqvist",
+        "match_count": 0,
+        "results": []
+      }
+    },
+    {
+      "tool": "search_bookings",
+      "arguments": {
+        "q": "BA99201"
+      },
+      "result": {
+        "query": "BA99201",
+        "match_count": 0,
+        "results": []
+      }
+    },
+    {
+      "tool": "search_bookings",
+      "arguments": {
+        "q": "29 July"
+      },
+      "result": {
+        "query": "29 July",
+        "match_count": 0,
+        "results": []
+      }
+    },
+    {
+      "tool": "search_bookings",
+      "arguments": {
+        "q": "Copenhagen to Manchester"
+      },
+      "result": {
+        "query": "Copenhagen to Manchester",
+        "match_count": 0,
+        "results": []
+      }
+    },
+    {
+      "tool": "search_bookings",
+      "arguments": {
+        "q": "29 Jul 2026"
+      },
+      "result": {
+        "query": "29 Jul 2026",
+        "match_count": 0,
+        "results": []
+      }
+    },
+    {
+      "tool": "search_bookings",
+      "arguments": {
+        "q": "Manchester"
+      },
+      "result": {
+        "query": "Manchester",
+        "match_count": 0,
+        "results": []
+      }
+    },
+    {
+      "tool": "search_bookings",
+      "arguments": {
+        "q": "Copenhagen"
+      },
+      "result": {
+        "query": "Copenhagen",
+        "match_count": 0,
+        "results": []
+      }
+    },
+    {
+      "tool": "search_bookings",
+      "arguments": {
+        "q": "2026"
+      },
+      "result": {
+        "query": "2026",
+        "match_count": 0,
+        "results": []
+      }
+    }
+  ],
+  "actions_taken": [],
+  "escalations": [
+    {
+      "arguments": {
+        "summary": "Unable to find any bookings for passenger Peter Lindqvist related to flight BA-99201 on 29 July 2026. Possible issues with booking reference or email provided.",
+        "requested_decision": "Please investigate and assist in finding the relevant booking or provide further guidance on how to proceed.",
+        "booking_ref": "BA-99201",
+        "queue": "GENERAL"
+      },
+      "result": {
+        "escalation_id": "ESC-00005",
+        "raised_at": "2026-09-15T11:59:01Z",
+        "status": "OPEN",
+        "queue": "GENERAL",
+        "summary": "Unable to find any bookings for passenger Peter Lindqvist related to flight BA-99201 on 29 July 2026. Possible issues with booking reference or email provided.",
+        "requested_decision": "Please investigate and assist in finding the relevant booking or provide further guidance on how to proceed.",
+        "booking_ref": "BA-99201",
+        "recommendation": null,
+        "blocking_clause": null
+      }
+    }
+  ],
+  "money": {
+    "total_real_paid_gbp": 0,
+    "total_dry_run_would_pay_gbp": 0
+  },
+  "uncertainties": [],
+  "human_followup": [
+    {
+      "type": "escalation",
+      "arguments": {
+        "summary": "Unable to find any bookings for passenger Peter Lindqvist related to flight BA-99201 on 29 July 2026. Possible issues with booking reference or email provided.",
+        "requested_decision": "Please investigate and assist in finding the relevant booking or provide further guidance on how to proceed.",
+        "booking_ref": "BA-99201",
+        "queue": "GENERAL"
+      },
+      "result": {
+        "escalation_id": "ESC-00005",
+        "raised_at": "2026-09-15T11:59:01Z",
+        "status": "OPEN",
+        "queue": "GENERAL",
+        "summary": "Unable to find any bookings for passenger Peter Lindqvist related to flight BA-99201 on 29 July 2026. Possible issues with booking reference or email provided.",
+        "requested_decision": "Please investigate and assist in finding the relevant booking or provide further guidance on how to proceed.",
+        "booking_ref": "BA-99201",
+        "recommendation": null,
+        "blocking_clause": null
+      }
+    }
+  ],
+  "trace": [
+    {
+      "tool": "search_bookings",
+      "arguments": {
+        "q": "BA-99201"
+      },
+      "result": {
+        "query": "BA-99201",
+        "match_count": 0,
+        "results": []
+      },
+      "blocked": false
+    },
+    {
+      "tool": "search_bookings",
+      "arguments": {
+        "q": "p.lindqvist@mailbox.example"
+      },
+      "result": {
+        "query": "p.lindqvist@mailbox.example",
+        "match_count": 0,
+        "results": []
+      },
+      "blocked": false
+    },
+    {
+      "tool": "search_bookings",
+      "arguments": {
+        "q": "Peter Lindqvist"
+      },
+      "result": {
+        "query": "Peter Lindqvist",
+        "match_count": 0,
+        "results": []
+      },
+      "blocked": false
+    },
+    {
+      "tool": "search_bookings",
+      "arguments": {
+        "q": "Lindqvist"
+      },
+      "result": {
+        "query": "Lindqvist",
+        "match_count": 0,
+        "results": []
+      },
+      "blocked": false
+    },
+    {
+      "tool": "search_bookings",
+      "arguments": {
+        "q": "BA99201"
+      },
+      "result": {
+        "query": "BA99201",
+        "match_count": 0,
+        "results": []
+      },
+      "blocked": false
+    },
+    {
+      "tool": "search_bookings",
+      "arguments": {
+        "q": "29 July"
+      },
+      "result": {
+        "query": "29 July",
+        "match_count": 0,
+        "results": []
+      },
+      "blocked": false
+    },
+    {
+      "tool": "search_bookings",
+      "arguments": {
+        "q": "Copenhagen to Manchester"
+      },
+      "result": {
+        "query": "Copenhagen to Manchester",
+        "match_count": 0,
+        "results": []
+      },
+      "blocked": false
+    },
+    {
+      "tool": "search_bookings",
+      "arguments": {
+        "q": "29 Jul 2026"
+      },
+      "result": {
+        "query": "29 Jul 2026",
+        "match_count": 0,
+        "results": []
+      },
+      "blocked": false
+    },
+    {
+      "tool": "search_bookings",
+      "arguments": {
+        "q": "Manchester"
+      },
+      "result": {
+        "query": "Manchester",
+        "match_count": 0,
+        "results": []
+      },
+      "blocked": false
+    },
+    {
+      "tool": "search_bookings",
+      "arguments": {
+        "q": "Copenhagen"
+      },
+      "result": {
+        "query": "Copenhagen",
+        "match_count": 0,
+        "results": []
+      },
+      "blocked": false
+    },
+    {
+      "tool": "search_bookings",
+      "arguments": {
+        "q": "2026"
+      },
+      "result": {
+        "query": "2026",
+        "match_count": 0,
+        "results": []
+      },
+      "blocked": false
+    },
+    {
+      "tool": "escalate",
+      "arguments": {
+        "summary": "Unable to find any bookings for passenger Peter Lindqvist related to flight BA-99201 on 29 July 2026. Possible issues with booking reference or email provided.",
+        "requested_decision": "Please investigate and assist in finding the relevant booking or provide further guidance on how to proceed.",
+        "booking_ref": "BA-99201",
+        "queue": "GENERAL"
+      },
+      "result": {
+        "escalation_id": "ESC-00005",
+        "raised_at": "2026-09-15T11:59:01Z",
+        "status": "OPEN",
+        "queue": "GENERAL",
+        "summary": "Unable to find any bookings for passenger Peter Lindqvist related to flight BA-99201 on 29 July 2026. Possible issues with booking reference or email provided.",
+        "requested_decision": "Please investigate and assist in finding the relevant booking or provide further guidance on how to proceed.",
+        "booking_ref": "BA-99201",
+        "recommendation": null,
+        "blocking_clause": null
+      },
+      "blocked": false
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 30152,
+    "completion_tokens": 275,
+    "total_tokens": 30427,
+    "model_calls": 12,
+    "estimated_cost_usd": 0.004688,
+    "pricing": {
+      "input_per_1m_usd": 0.15,
+      "output_per_1m_usd": 0.6
+    }
+  },
+  "run_meta": {
+    "iterations": 12
+  }
+}

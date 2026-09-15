@@ -1,0 +1,152 @@
+{
+  "generated_at": "2026-09-15T12:00:25.607163+00:00",
+  "dry_run": false,
+  "model": "gpt-4o-mini",
+  "pricing": {
+    "input_per_1m_usd": 0.15,
+    "output_per_1m_usd": 0.6
+  },
+  "cases": [
+    {
+      "case_id": "case-01",
+      "escalated": false,
+      "paid_gbp": 307.09,
+      "prompt_tokens": 42827,
+      "completion_tokens": 708,
+      "total_tokens": 43535,
+      "model_calls": 12,
+      "estimated_cost_usd": 0.006849,
+      "headline": "Final Decision:"
+    },
+    {
+      "case_id": "case-02",
+      "escalated": true,
+      "paid_gbp": 0,
+      "prompt_tokens": 31974,
+      "completion_tokens": 496,
+      "total_tokens": 32470,
+      "model_calls": 8,
+      "estimated_cost_usd": 0.005094,
+      "headline": "Escalated to a human (queue: GENERAL)."
+    },
+    {
+      "case_id": "case-03",
+      "escalated": false,
+      "paid_gbp": 0,
+      "prompt_tokens": 13474,
+      "completion_tokens": 232,
+      "total_tokens": 13706,
+      "model_calls": 5,
+      "estimated_cost_usd": 0.00216,
+      "headline": "John Smith's flight (AK533) from London Heathrow (LHR) to Dublin (DUB) on August"
+    },
+    {
+      "case_id": "case-04",
+      "escalated": true,
+      "paid_gbp": 0,
+      "prompt_tokens": 30152,
+      "completion_tokens": 275,
+      "total_tokens": 30427,
+      "model_calls": 12,
+      "estimated_cost_usd": 0.004688,
+      "headline": "Escalated to a human (queue: GENERAL)."
+    },
+    {
+      "case_id": "case-05",
+      "escalated": false,
+      "paid_gbp": 112.0,
+      "prompt_tokens": 17730,
+      "completion_tokens": 293,
+      "total_tokens": 18023,
+      "model_calls": 6,
+      "estimated_cost_usd": 0.002835,
+      "headline": "Marta Kowalczyk will receive a reimbursement of \u00a3112 for the hotel stay incurred"
+    },
+    {
+      "case_id": "case-06",
+      "escalated": true,
+      "paid_gbp": 0,
+      "prompt_tokens": 18638,
+      "completion_tokens": 240,
+      "total_tokens": 18878,
+      "model_calls": 6,
+      "estimated_cost_usd": 0.00294,
+      "headline": "Escalated to a human (queue: GENERAL)."
+    },
+    {
+      "case_id": "case-07",
+      "escalated": true,
+      "paid_gbp": 0,
+      "prompt_tokens": 14103,
+      "completion_tokens": 491,
+      "total_tokens": 14594,
+      "model_calls": 5,
+      "estimated_cost_usd": 0.00241,
+      "headline": "Escalated to a human (queue: GENERAL)."
+    },
+    {
+      "case_id": "case-08",
+      "escalated": false,
+      "paid_gbp": 0,
+      "prompt_tokens": 14994,
+      "completion_tokens": 427,
+      "total_tokens": 15421,
+      "model_calls": 5,
+      "estimated_cost_usd": 0.002505,
+      "headline": "After reviewing your case regarding booking AER-3B7Y5K and flight AK640, here\u2019s "
+    },
+    {
+      "case_id": "case-09",
+      "escalated": true,
+      "paid_gbp": 0.0,
+      "prompt_tokens": 34635,
+      "completion_tokens": 453,
+      "total_tokens": 35088,
+      "model_calls": 10,
+      "estimated_cost_usd": 0.005467,
+      "headline": "Escalated to a human (queue: OPS_LIAISON)."
+    },
+    {
+      "case_id": "case-10",
+      "escalated": false,
+      "paid_gbp": 286.42,
+      "prompt_tokens": 65305,
+      "completion_tokens": 653,
+      "total_tokens": 65958,
+      "model_calls": 12,
+      "estimated_cost_usd": 0.010188,
+      "headline": "Greg Whitmore's flight AK229 from LHR to GVA on 5 August 2026 was cancelled due "
+    },
+    {
+      "case_id": "case-11",
+      "escalated": true,
+      "paid_gbp": 0,
+      "prompt_tokens": 28806,
+      "completion_tokens": 423,
+      "total_tokens": 29229,
+      "model_calls": 8,
+      "estimated_cost_usd": 0.004575,
+      "headline": "Escalated to a human (queue: GENERAL)."
+    },
+    {
+      "case_id": "case-12",
+      "escalated": true,
+      "paid_gbp": 0.0,
+      "prompt_tokens": 29560,
+      "completion_tokens": 482,
+      "total_tokens": 30042,
+      "model_calls": 8,
+      "estimated_cost_usd": 0.004723,
+      "headline": "Escalated to a human (queue: GENERAL)."
+    }
+  ],
+  "totals": {
+    "prompt_tokens": 342198,
+    "completion_tokens": 5173,
+    "total_tokens": 347371,
+    "model_calls": 97,
+    "estimated_cost_usd": 0.054434,
+    "paid_gbp": 705.51,
+    "escalated_count": 7
+  }
+}

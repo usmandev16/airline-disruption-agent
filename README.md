@@ -1,197 +1,87 @@
-# Aerlink Disruption Desk — practical exercise
+# Aerlink Disruption Desk
 
-Thank you for making the time. This is the practical part of our process for the AI Engineer role.
+An OpenAI tool-calling agent that works an airline disruption case end to end: reads an inbound
+passenger message, establishes who's writing and what actually happened from Aerlink's own
+records, works out what's owed versus what's asked, then either acts (rebooking, hotel voucher,
+duty-of-care payment) or escalates to a human — producing a `record.json` + `record.md` for every
+case it handles.
 
-**Timebox: three hours.** Self-timed, whenever suits you inside the window we agreed. Please don't
-go far over — we would much rather see three focused hours and an honest account of what you left
-out than a weekend of polishing.
+The reasoning behind what it does and doesn't do is in [`DECISIONS.md`](DECISIONS.md). The
+original assessment brief is in [`BRIEF.md`](BRIEF.md).
 
-We will spend the interview afterwards talking through what you built and why, so the reasoning
-matters at least as much as the result.
+## Prerequisites
 
----
+- Python 3 (developed against 3.13).
+- Two keys in `.env`: `OPS_API_KEY` (given — the default in `.env.example` already matches the
+  local ops server) and `OPENAI_API_KEY` (given separately by Aerlink).
 
-## The situation
-
-Aerlink is a mid-sized airline. When flights are cancelled, delayed or diverted, affected passengers
-write in. A small team called the **disruption desk** picks up each of those messages and works the
-case.
-
-Working a case means, roughly:
-
-- establishing who is writing and which booking they mean;
-- establishing what actually happened to the flight, from Aerlink's own records rather than from
-  the passenger's account;
-- working out what the passenger is owed under the Passenger Care Policy, and what they are asking
-  for, which are frequently not the same thing;
-- finding out what options actually exist right now;
-- and then either resolving it, or handing it to a human with enough for them to decide quickly.
-
-The desk is drowning. Volume roughly tripled after a bad summer and the team is making mistakes —
-mostly paying the wrong amount, occasionally acting on the wrong booking.
-
-## What you are building
-
-**A system that works these cases.**
-
-It reads an inbound passenger message, does whatever it needs to do to understand and handle it,
-takes the actions it judges appropriate, and produces a record of what it did and why.
-
-Build it however you like. Any language, any libraries, any structure, any design. We have no
-house style here and we are not looking for a particular shape of solution — two good candidates
-have every reason to hand in quite different systems.
-
-**One constraint: it must use OpenAI models.** We will send you an API key separately. It has a
-hard spending cap of roughly $15–20, so it will not survive being pointed at a runaway loop.
-Use it however you want within that.
-
-## What you are given
-
-```
-candidate/
-├── README.md                 this file
-├── DECISIONS_TEMPLATE.md     copy to DECISIONS.md and fill in — a required deliverable
-├── .env.example              copy to .env
-├── env/
-│   ├── ops_server.py         the Aerlink operations API (run this locally)
-│   ├── API.md                its endpoint reference — read this properly
-│   ├── data/                 the records it serves, including the Passenger Care Policy
-│   └── Dockerfile, docker-compose.yml
-└── cases/case-01 … case-12/  twelve real cases: inbound.txt and meta.json
-```
-
-The **operations API** is the desk's window onto the airline: bookings, flights, the policy,
-customer history, seat availability, hotel allocation, and the endpoints that actually do things —
-re-book a passenger, issue a voucher, make a payment, hand a case to a human.
-
-The **twelve cases** are real ones, lightly anonymised, with all the mess that implies. They are in
-no particular order and they are not of uniform difficulty.
-
-### Running it
+## Setup
 
 ```bash
-cp .env.example .env
-python3 env/ops_server.py            # http://127.0.0.1:8642 — Python 3, no installation needed
-curl http://127.0.0.1:8642/health
+pip install -r requirements.txt
+cp .env.example .env      # fill in OPENAI_API_KEY
 ```
 
-Or `cd env && docker compose up` if you'd rather not use the host Python. Everything is local;
-nothing calls out to the internet except your own calls to OpenAI.
+## Run everything — the one command
 
-`POST /_reset` returns the API to its starting state, so you can re-run cleanly as often as you
-like.
+```bash
+python env/ops_server.py          # terminal 1 — the local ops API
+python -m disruption_desk.run_all # terminal 2 — works all twelve cases in cases/
+```
 
-## Requirements
+This writes `output/<case-id>/record.json` and `record.md` for every case, plus a run-level
+`output/summary.json` / `summary.md` (per-case and total: money paid, tokens, estimated cost,
+escalation count). **Dry-run is the default** — no real rebooking, payment, refund, or voucher
+ever fires unless you pass `--live` (below).
 
-1. **Work a case end to end**, from the raw inbound message to either a resolution or a handover
-   to a human.
+## Run a single case
 
-2. **Work for a case we have not shown you.** We will run your system against inbound messages
-   that are not in `cases/`. There must be one documented way to hand it a new case.
+```bash
+python -m disruption_desk.run --case cases/case-01
+```
 
-3. **Produce a record for each case.** Its shape is entirely your choice, but it must capture at
-   least:
-   - what you decided and what the passenger gets;
-   - why — the reasoning, and what it rests on;
-   - what was consulted to reach it;
-   - what was actually done: every action taken against a booking or a payment;
-   - anything you remain uncertain about;
-   - what a human still needs to do, if anything.
+## Run a case we weren't given (an unseen case)
 
-4. **Actions are real.** The re-booking, payment, refund and voucher endpoints genuinely act:
-   they move money and change passengers' journeys, and every one is logged permanently. Treat
-   them the way you would treat the real thing.
+```bash
+python -m disruption_desk.run --message path/to/inbound.txt
+```
 
-5. **Stay inside the budget.** A full run across all twelve cases must cost **under $2.00**.
-   Report your actual spend and token usage in `DECISIONS.md`. (This is a real constraint on the
-   desk — it runs thousands of these a week.)
+Point it at any raw inbound message file — this is the documented entry point for a new case.
 
-   A practical note: your key will not survive many full runs at that ceiling. Develop against
-   one or two cases and save the full sweep for when you actually need it. If you deliberately
-   go over the budget for a reason you can defend, that is a legitimate answer — tell us the
-   reason and the number rather than quietly trimming something that mattered.
+## Run for real
 
-6. **We must be able to run it.** From a clean clone, with our own key, following your README, in
-   one documented command.
+Both `run` and `run_all` default to dry-run (nothing real happens; write actions are logged and a
+realistic fake success is returned). Add `--live` to actually fire rebookings, payments, refunds,
+and vouchers against the ops API:
 
-7. **Give us a way to check it behaves correctly.** However you like. We are interested in what
-   you consider worth checking and how you went about it.
+```bash
+python -m disruption_desk.run_all --live
+```
 
-### On finishing
+Add `-v` to either command for INFO-level logging (dry-run lines, 429 retries).
 
-Three hours is not enough to do all of this well. **Deciding what to do properly and what to leave
-out is part of what we are assessing.** We would far rather see three requirements done thoroughly,
-with a clear account of why you dropped the rest, than seven done thinly. Tell us what you chose
-and why.
+## Where output lands
 
-## What to send us
+- `output/<case-id>/record.json` — machine-readable: decision, reasoning, every read consulted,
+  every write action taken (and whether it was real/dry-run/blocked/failed), uncertainties, human
+  follow-up, token usage and estimated cost, and the full raw tool-call trace.
+- `output/<case-id>/record.md` — the same record, human-readable.
+- `output/summary.json` / `output/summary.md` — written only by `run_all`: one row per case plus
+  grand totals.
 
-1. **The code**, with a README covering setup and the one command to run it.
-2. **`DECISIONS.md`** — copy `DECISIONS_TEMPLATE.md` and work through it. This is not an
-   afterthought; it is the document the interview is built around. Budget real time for it.
-3. **The output of a full run** over the twelve cases, in whatever form your system produces.
-4. **Whatever you built to check it works.**
-5. **Your AI assistant transcripts** — the actual sessions, not a summary. Required; see below.
+## Tests
 
-Send a zip or a link to a repository.
+No network or API key needed — the OpenAI client and the ops API client are both faked:
 
-## Using AI assistants
+```bash
+python tests/test_agent.py    # the tool-call loop and every code-enforced guardrail
+python tests/test_record.py   # record.json/record.md construction from a trace
+python tests/test_tools.py    # dispatch() never lets a malformed tool call crash the run
+```
 
-**Please use them.** Claude Code, Cursor, ChatGPT, Copilot, whatever you normally reach for — we use
-these tools every day here and we are not interested in watching you type from memory.
+To check the ops-API client layer for real (starts nothing else, just needs the server running):
 
-### Send us the conversation — this part is mandatory
-
-**Your session transcripts are a required deliverable, alongside the code.** Not a summary of them:
-the actual back-and-forth. What you asked for, what came back, and what you did about it.
-
-This is not a trap and it is not there to catch anyone out. Working well with these tools is a large
-part of this job, and a transcript is the only honest evidence of how someone does it — where you
-steered, where you pushed back, where you were happy to let it run. We would rather read a messy real
-session than a tidy account written afterwards. A submission without transcripts is incomplete, and
-we will come back and ask for them.
-
-**Getting them out:**
-
-| Tool | How |
-|---|---|
-| Claude Code | `/export` in the session, or copy the session log out of `~/.claude/projects/` |
-| Cursor | the `...` menu at the top of the chat pane → **Export Chat** |
-| ChatGPT | **Share** each conversation and send us the links, or Settings → Data controls → Export data |
-| Copilot Chat | command palette → **Chat: Export Chat...** |
-| Anything else | whatever it gives you — copy-pasting the conversation into a markdown file is completely fine |
-
-Put them in a `transcripts/` folder in what you send us. Any readable format: `.md`, `.txt`,
-`.jsonl`, exported HTML, or a file of share links. If you worked across several sessions or several
-tools, send all of them. If one is enormous, send it anyway rather than trimming it — length is not
-held against anyone.
-
-Two practical things. **Redact your API key** before you send anything; it will be sitting in the
-scrollback. And if a session contains something genuinely unrelated and personal, cut that part and
-say you did.
-
-If you truly used no assistant at all, that is a legitimate answer — say so in `DECISIONS.md` and
-tell us why.
-
-### And write about it
-
-Section 9 of `DECISIONS.md` is where you tell us where you used them, where you **overrode** them,
-and where you were content to let them run unchecked. Saying "I used Claude Code for most of the
-scaffolding" is a completely fine answer. Saying nothing, when you clearly did, is not.
-
-## A note on what we care about
-
-We are not counting features. We are trying to understand how you think about a problem like this
-one: how you broke it up, what you decided to trust, what you decided to be careful about, and
-what you would do next with more time.
-
-If you finish something and think "that isn't right, but it will do for now" — write that down.
-Noticing it is the valuable part, and we will ask you about it.
-
-## Questions
-
-Anything unclear or apparently contradictory in the brief, ask us — that is not a penalty and we
-will answer quickly. Anything unclear in the **cases** is part of the exercise: make a call,
-write down the assumption, and move on.
-
-Good luck.
+```bash
+python env/ops_server.py
+python scripts/smoke_test.py
+```
