@@ -6,14 +6,15 @@ records, works out what's owed versus what's asked, then either acts (rebooking,
 duty-of-care payment) or escalates to a human — producing a `record.json` + `record.md` for every
 case it handles.
 
-The reasoning behind what it does and doesn't do is in [`DECISIONS.md`](DECISIONS.md). The
-original assessment brief is in [`BRIEF.md`](BRIEF.md).
+The reasoning behind what it does and doesn't do — approach, assumptions, prompting, cost,
+failure handling, and known limitations — is in [`DECISIONS.md`](DECISIONS.md).
 
 ## Prerequisites
 
 - Python 3 (developed against 3.13).
-- Two keys in `.env`: `OPS_API_KEY` (given — the default in `.env.example` already matches the
-  local ops server) and `OPENAI_API_KEY` (given separately by Aerlink).
+- Two keys in `.env`: `OPS_API_KEY` (the default in `.env.example` already matches the local ops
+  server, included for local dev — change it if you run the ops server with a different key) and
+  `OPENAI_API_KEY` (your own OpenAI API key).
 
 ## Setup
 
@@ -40,7 +41,7 @@ ever fires unless you pass `--live` (below).
 python -m disruption_desk.run --case cases/case-01
 ```
 
-## Run a case we weren't given (an unseen case)
+## Run a new, unseen case
 
 ```bash
 python -m disruption_desk.run --message path/to/inbound.txt

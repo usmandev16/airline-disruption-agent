@@ -1,11 +1,9 @@
 # DECISIONS
 
-**Name:** Usman
-**Time spent:** 4 hours
-**How to run it:**
+## How to run it
 
 ```bash
-cp .env.example .env        # fill in OPS_API_KEY (given) and OPENAI_API_KEY (given separately)
+cp .env.example .env        # fill in OPENAI_API_KEY with your own key
 python env/ops_server.py    # terminal 1
 python -m disruption_desk.run_all   # terminal 2 - dry-run sweep over all twelve cases
 ```
@@ -14,7 +12,7 @@ python -m disruption_desk.run_all   # terminal 2 - dry-run sweep over all twelve
 `output/summary.{json,md}`. Add `--live` to actually fire the write actions (rebook, refunds,
 payments, vouchers) against the ops API — dry-run is the default and nothing real happens without
 it. For a single case: `python -m disruption_desk.run --case cases/case-01`, or
-`python -m disruption_desk.run --message path/to/file.txt` for a case we weren't given.
+`python -m disruption_desk.run --message path/to/file.txt` for a new, unseen case.
 
 ---
 
@@ -286,7 +284,7 @@ saw (model sampling, plus the deliberately-flaky availability service) actually 
 
 | Session / file | Tool | What I was doing in it |
 |---|---|---|
-| This conversation (exported to `transcripts/`) | Claude Code (Sonnet 5) | The entire build, in one continuous session: config + `OpsClient`, the agent loop and its guardrails, the record format, cost/token tracking, the two-cap money limit, the hotel-double-pay guard, and every fix below — each driven by a specific bug I'd found by reading real output. |
+| This conversation | Claude Code (Sonnet 5) | The entire build, in one continuous session: config + `OpsClient`, the agent loop and its guardrails, the record format, cost/token tracking, the two-cap money limit, the hotel-double-pay guard, and every fix below — each driven by a specific bug I'd found by reading real output. |
 
 Claude Code wrote essentially all of the code. My role was direction, review, and — this mattered
 more than writing code myself would have — running the thing for real and reading its output
@@ -373,7 +371,6 @@ Python, needs a real model in the loop to actually test — a mock can't catch i
 
 ## Anything else
 
-- Transcripts are in `transcripts/`, covering this whole build.
 - `output/audit_after_live_run.json` is the ops server's own `/_audit` snapshot taken immediately
   after the documented live run, kept as an independent record of what actually happened
   server-side, separate from anything my own code claims about itself.
