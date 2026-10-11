@@ -9,6 +9,7 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import re
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -17,6 +18,18 @@ from .agent import Agent
 from .config import load_config
 from .ops_client import OpsClient
 from .record import build_record, write_record
+
+# A line that's just a heading/label (e.g. "Final Decision:", "**Summary:**") and nothing else -
+# skip these when picking a headline, they carry no content of their own.
+_LABEL_ONLY_RE = re.compile(r"^[A-Za-z0-9 _-]{1,40}:$")
+
+
+def _headline(summary: str) -> str:
+    for line in (summary or "").splitlines():
+        line = line.strip().strip("*").strip()
+        if line and not _LABEL_ONLY_RE.match(line):
+            return line[:80]
+    return "(no decision text)"
 
 CASES_DIR = Path("cases")
 OUTPUT_DIR = Path("output")
@@ -119,8 +132,7 @@ def main() -> None:
         )
         write_record(record, OUTPUT_DIR)
 
-        headline = (record["decision"]["summary"] or "").strip().splitlines()
-        headline = headline[0][:80] if headline else "(no decision text)"
+        headline = _headline(record["decision"]["summary"])
         money = record["money"]
         paid = money["total_real_paid_gbp"] if args.live else money["total_dry_run_would_pay_gbp"]
         escalated = record["decision"]["escalated"]
