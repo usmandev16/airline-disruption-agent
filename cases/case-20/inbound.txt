@@ -1,0 +1,13 @@
+From: John Smith <john.smith.personal@mailbox.example>
+To: Aerlink Customer Care <care@aerlink.example>
+Date: Tue, 4 Aug 2026 18:50:12 +0100
+Subject: AK118 cancelled - need rebooking urgently
+
+Hi,
+
+My flight AK118 from Gatwick to Edinburgh today was cancelled. My booking
+reference is AER-6M2J7W. Please rebook me onto the next available flight
+and let me know about compensation too.
+
+Thanks,
+John Smith
