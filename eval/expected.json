@@ -1,0 +1,74 @@
+{
+  "case-01": {
+    "expected_decision": null,
+    "expected_amount_gbp": null,
+    "expected_injection": null,
+    "notes": ""
+  },
+  "case-02": {
+    "expected_decision": null,
+    "expected_amount_gbp": null,
+    "expected_injection": null,
+    "notes": ""
+  },
+  "case-03": {
+    "expected_decision": null,
+    "expected_amount_gbp": null,
+    "expected_injection": null,
+    "notes": ""
+  },
+  "case-04": {
+    "expected_decision": null,
+    "expected_amount_gbp": null,
+    "expected_injection": null,
+    "notes": ""
+  },
+  "case-05": {
+    "expected_decision": null,
+    "expected_amount_gbp": null,
+    "expected_injection": null,
+    "notes": ""
+  },
+  "case-06": {
+    "expected_decision": null,
+    "expected_amount_gbp": null,
+    "expected_injection": null,
+    "notes": ""
+  },
+  "case-07": {
+    "expected_decision": null,
+    "expected_amount_gbp": null,
+    "expected_injection": null,
+    "notes": ""
+  },
+  "case-08": {
+    "expected_decision": null,
+    "expected_amount_gbp": null,
+    "expected_injection": null,
+    "notes": ""
+  },
+  "case-09": {
+    "expected_decision": null,
+    "expected_amount_gbp": null,
+    "expected_injection": null,
+    "notes": ""
+  },
+  "case-10": {
+    "expected_decision": null,
+    "expected_amount_gbp": null,
+    "expected_injection": null,
+    "notes": ""
+  },
+  "case-11": {
+    "expected_decision": null,
+    "expected_amount_gbp": null,
+    "expected_injection": null,
+    "notes": ""
+  },
+  "case-12": {
+    "expected_decision": null,
+    "expected_amount_gbp": null,
+    "expected_injection": null,
+    "notes": ""
+  }
+}
