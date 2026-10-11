@@ -146,6 +146,8 @@ class _CaseState:
     needs_entitlements_recheck: bool = False
     committed_total_gbp: float = 0.0
     hotel_vouchers_issued: dict = field(default_factory=dict)  # booking_ref -> voucher_id
+    capped_actions: dict = field(default_factory=dict)  # (tool, booking_ref) -> {arguments, reason}
+    needs_escalation_for_cap: bool = False
 
 
 def _serialize(result: Any) -> Any:
@@ -168,6 +170,21 @@ def _write_amount(name: str, args: dict) -> Optional[float]:
         return float(value)
     except (TypeError, ValueError):
         return None
+
+
+def _augment_escalation_arguments(args: dict, state: "_CaseState") -> dict:
+    """Make sure a real escalation always carries any cap-blocked attempt - the model's own
+    summary might forget to mention it, so the code adds it to blocking_clause regardless."""
+    if not state.capped_actions:
+        return args
+    notes = [
+        f"Blocked attempt: {tool} on {booking_ref or '(no booking_ref)'} - {info['reason']}."
+        for (tool, booking_ref), info in state.capped_actions.items()
+    ]
+    args = dict(args)
+    existing = args.get("blocking_clause")
+    args["blocking_clause"] = (existing + " " if existing else "") + " ".join(notes)
+    return args
 
 
 def _escalation_decision_text(args: dict, result: dict) -> str:
@@ -232,6 +249,15 @@ class Agent:
                         }
                     )
                     continue
+                if state.needs_escalation_for_cap:
+                    messages.append(
+                        {
+                            "role": "system",
+                            "content": "An action in this case was blocked by a money cap and has not "
+                            "been escalated. You may not close this case without calling escalate.",
+                        }
+                    )
+                    continue
                 return AgentResult(decision=message.content or "", trace=trace, iterations=iteration, usage=usage)
 
             escalation: Optional[dict] = None
@@ -250,6 +276,8 @@ class Agent:
                     result: Any = {"blocked": True, "reason": denial}
                     trace.append(ToolCallRecord(name, arguments, result, blocked=True))
                 else:
+                    if name == "escalate":
+                        arguments = _augment_escalation_arguments(arguments, state)
                     try:
                         raw_result = dispatch(self.ops, name, arguments)
                     except OpsApiError as exc:
@@ -308,6 +336,13 @@ class Agent:
                 "Do not repeat it - move on to your final decision."
             )
 
+        if write_key in state.capped_actions:
+            return (
+                f"{name} on this booking was already blocked by a cap "
+                f"({state.capped_actions[write_key]['reason']}). You may not retry the same "
+                "action type with a different amount or option - escalate instead."
+            )
+
         if name in ("pay_goodwill", "refund"):
             zero_amount = args.get("amount_gbp")
             if zero_amount is not None and zero_amount <= 0:
@@ -330,19 +365,22 @@ class Agent:
         if amount is not None:
             limit = self.config.autonomy_limit_gbp
             if amount > limit:
-                return (
-                    f"£{amount:.2f} exceeds the per-action autonomy limit of £{limit:.2f}. "
-                    "Escalate instead."
-                )
+                reason = f"£{amount:.2f} exceeds the per-action autonomy limit of £{limit:.2f}"
+                state.capped_actions[write_key] = {"arguments": dict(args), "reason": reason}
+                state.needs_escalation_for_cap = True
+                return f"{reason}. Escalate instead."
 
             cumulative_limit = self.config.cumulative_limit_gbp
             projected_total = state.committed_total_gbp + amount
             if projected_total > cumulative_limit:
-                return (
+                reason = (
                     f"£{amount:.2f} would bring this case's committed total to £{projected_total:.2f} "
                     f"(already committed: £{state.committed_total_gbp:.2f}), over the £{cumulative_limit:.2f} "
-                    "cumulative cap for this case. Escalate instead."
+                    "cumulative cap for this case"
                 )
+                state.capped_actions[write_key] = {"arguments": dict(args), "reason": reason}
+                state.needs_escalation_for_cap = True
+                return f"{reason}. Escalate instead."
 
         if state.entitlements_status in ("INSUFFICIENT_DATA", "NO_DISRUPTION_RECORDED"):
             return (
