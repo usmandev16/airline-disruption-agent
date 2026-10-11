@@ -1,17 +1,14 @@
-"""Runnable check for record building: mode detection, money totals, uncertainties.
+"""Checks for record building: mode detection, money totals, uncertainties.
 
 Builds an AgentResult by hand (no OpenAI/ops calls needed) and checks build_record/
 render_markdown/write_record derive the right things from it.
 
-Run: python tests/test_record.py
+Run: pytest tests/test_record.py
 """
 
 import json
-import sys
 import tempfile
 from pathlib import Path
-
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from disruption_desk.agent import AgentResult, ToolCallRecord, TokenUsage
 from disruption_desk.record import build_record, render_markdown, write_record
@@ -143,21 +140,3 @@ def test_usage_and_cost_in_record_and_markdown():
 
     md = render_markdown(record)
     assert "10,000 in + 2,000 out = 12,000 total across 5 model call(s)" in md
-
-
-def main():
-    tests = [
-        test_build_record_modes_and_money,
-        test_unresolved_block_flagged_without_escalation,
-        test_iteration_cap_marks_escalated,
-        test_markdown_and_files_render,
-        test_usage_and_cost_in_record_and_markdown,
-    ]
-    for test in tests:
-        test()
-        print(f"ok  {test.__name__}")
-    print(f"\n{len(tests)} passed")
-
-
-if __name__ == "__main__":
-    main()
